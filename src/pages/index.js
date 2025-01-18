@@ -1,10 +1,20 @@
 import Link from 'next/link';
 
+import data from '../data.json'
+import { languages } from '@/constants';
 
-export default function Home({ message, locale }) {
+
+export default function Home({ locale, site }) {
+    // console.log(data);
+
+    // console.log("Site:", site);
+
+
+
+
     return (
         <div>
-            <h1>{message.welcome}</h1>
+            <h1>{site}</h1>
             <p>Current Locale: {locale}</p>
             <p>
                 <Link href="/" locale="en">
@@ -20,19 +30,19 @@ export default function Home({ message, locale }) {
 }
 
 export async function getStaticProps(context) {
+
     const { locale } = context;
 
-    console.log('Locale:', locale); // Debug locale
+    console.log(context);
 
-    // Localized messages
-    const messages = {
-        en: { welcome: 'Welcome' },
-        de: { welcome: 'Willkommen' },
-    };
+
+    const contentfulModel = languages[context.locale].model
+
+    const site = data.fields.title[contentfulModel]
 
     return {
         props: {
-            message: messages[locale] || messages['en'], // Fallback to English if locale is not found
+            site,
             locale: locale || 'en',                     // Default locale to 'en'
         },
     };
